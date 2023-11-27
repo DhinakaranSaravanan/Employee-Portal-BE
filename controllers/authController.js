@@ -36,7 +36,7 @@ const login = /* asyncHandler( */async (req, res) => {
         )
     // create secure cookie with refresh token 
     //name of the cookie is 'jwt
-    res.cookie = ('jst', refreshToken,{
+    res.cookie = ('jwt', refreshToken,{
         httpOnly : true, // access only by web server 
         secure : true, // https
         sameSite : 'None', // cross-site cookie allowed
