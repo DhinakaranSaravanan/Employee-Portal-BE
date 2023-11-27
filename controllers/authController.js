@@ -36,7 +36,7 @@ const login = /* asyncHandler( */async (req, res) => {
         )
     // create secure cookie with refresh token 
     //name of the cookie is 'jwt
-    res.cookie = ('jwt', refreshToken,{
+    res.cookie('jwt', refreshToken,{
         httpOnly : true, // access only by web server 
         secure : true, // https
         sameSite : 'None', // cross-site cookie allowed
@@ -55,16 +55,15 @@ const refresh = (req, res) => {
     const cookies = req.cookies
     if(!cookies?.jwt) return res.status(401).json({message : 'Unauthorized'})
     const refreshToken = cookies.jwt
+
 jwt.verify(
-    refreshToken, process.env.REFRESH_TOKEN_SECRET,
-    /* asyncHandler( */async (err, decoded) => {
-        if(err){
-            return res.status(403).json({message : "Forbidden"})
-        }
+    refreshToken, process.env.REFRESH_TOKEN_SECRET,/* asyncHandler( */async (err, decoded) => {
+        if(err) return res.status(403).json({message : "Forbidden"})
+        
         const foundUser = await User.findOne({username : decoded.username}).exec()
-        if(!foundUser){
-            return res.status(401).json({message : "Unauthorized entry"})
-        }
+
+        if(!foundUser) return res.status(401).json({message : "Unauthorized entry"})
+        
         const accessToken = jwt.sign(
             {"UserInfo" : {
                 'username':foundUser.username,
